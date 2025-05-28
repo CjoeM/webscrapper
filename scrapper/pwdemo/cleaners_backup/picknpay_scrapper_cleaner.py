@@ -8,7 +8,7 @@ pattern_bundle_units = r"\d+(\.\d+)?"
 
 items={"item_ID":[],"store":[],"item_name":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],\
        "special end date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
-with open("/Users/sellomothemane/Desktop/Oless AWS/scrapper/pwdemo/picknpay_items.json", "r") as f:
+with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json files/picknpay_items.json", "r") as f:
     data = json.load(f)
 
 
@@ -47,4 +47,21 @@ for item in data:
             pass
     except:
      items["special end date"].append("")
-print(items)
+
+
+print("item_ID: ",len(items["item_ID"]))
+print("item_ID: ",len(items["store"]))
+print("item_name: ",len(items["item_name"]))
+print("item_size: ",len(items["item_size"]))
+print("availability: ",len(items["availability"]))
+print("price: ",len(items["price"]))
+print("brand: ",len(items["brand"]))
+print("special price: ", len(items["special price"]))
+print("special: ", len(items["special"]))
+print("special end date: ", len(items["special end date"]))
+print("bundle deal: ", len(items["bundle deal"]))
+print("bundle prices: ", len(items["bundle prices"]))
+print("bundle unites: ", len(items["bundle unites"]))
+print("reward card: ", len(items["reward card"]))
+print("category: ", len(items["category"]))
+print(items["special end date"])

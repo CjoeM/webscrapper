@@ -2,4 +2,4 @@
 *cfg
 *.env
 *.txt
-
+*.DS_Store
