@@ -6,19 +6,20 @@ import pandas as pd
 
 pattern_size=r'\b\d+(\.\d+)?\s?(kg|g|l|m|mm|cm|ml|mg)\b'
 pattern_bundle_units = r"\d+(\.\d+)?"
-with open("/Users/sellomothemane/Desktop/Oless AWS/scrapper/pwdemo/asdasdasd.json", "r") as f:
+with open("Oless_AWS/scrapper/pwdemo/json files/asdasdasd.json", "r") as f:
     data = json.load(f)
     
 data=(data[0]["product_section_html"])
 # print(data)
 
-items={"item_ID":[],"store":[],"item_name":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],"special end date":[],\
+items={"item_ID":[],"store":[],"item_name":[],"link":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],"special end date":[],\
        "availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
 codes_id=[]
 soup = BeautifulSoup(data, "html.parser")
 search_items=soup.find("div", class_="hidden productListJSON")
 item_with_codes = json.loads(search_items.text.strip())
 data_items = soup.find_all("div", attrs={"data-product-ga": True})
+product_links = soup.find_all("div", class_="item-product__image __image")
 for code in item_with_codes:
     codes_id.append(code["code"])
 # print(search_items)
@@ -29,6 +30,11 @@ for code in item_with_codes:
 
 for code in codes_id:
     count=0
+    links=0
+    link_tag = product_links[links].find("a")
+    if link_tag and link_tag.has_attr("href"):
+        items["link"].append("www.checkers.co.za"+link_tag["href"])
+    links=links+1
     main_items=soup.find("div",class_=f'product-frame product-ga product_{code} js-heavy-attributes-populated')
 
 
@@ -124,7 +130,7 @@ print("bundle prices: ", len(items["bundle prices"]))
 
 df = pd.DataFrame(items)
 print(df)
-
+print(items["link"])
 
        
             

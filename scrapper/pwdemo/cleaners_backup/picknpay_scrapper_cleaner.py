@@ -36,6 +36,7 @@ for item in data:
     else:   
         items["special"].append("yes")
     try:
+        
         items["special end date"].append(item["potentialPromotions"][0]["endDate"])
         items["special"][-1]="yes"
         message=item["potentialPromotions"]["promotionTextMessage"].split(" ")
@@ -64,4 +65,4 @@ print("bundle prices: ", len(items["bundle prices"]))
 print("bundle unites: ", len(items["bundle unites"]))
 print("reward card: ", len(items["reward card"]))
 print("category: ", len(items["category"]))
-print(items["special end date"])
+print(items["special"])

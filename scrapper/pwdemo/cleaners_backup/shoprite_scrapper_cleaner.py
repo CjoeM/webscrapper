@@ -7,19 +7,20 @@ import pandas as pd
 pattern_size=r'\b\d+(\.\d+)?\s?(kg|g|l|m|mm|cm|ml|mg)\b'
 pattern=r'R\s?\d+'
 pattern_bundle_units = r"\d+(\.\d+)?"
-with open("/Users/sellomothemane/Desktop/Oless AWS/scrapper/pwdemo/pleasework.json", "r") as f:
+with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json files/pleasework.json", "r") as f:
     data = json.load(f)
     
 data=(data[0]["product_section_html"])
 
 
-items={"item_ID":[],"store":[],"item_name":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],\
+items={"item_ID":[],"store":[],"item_name":[],"link":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],\
        "special end date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
 codes_id=[]
 soup = BeautifulSoup(data, "html.parser")
 search_items=soup.find("div", class_="hidden productListJSON")
 item_with_codes = json.loads(search_items.text.strip())
 data_items = soup.find_all("div", attrs={"data-product-ga": True})
+product_links = soup.find_all("div", class_="item-product__image __image")
 for code in item_with_codes:
     codes_id.append(code["code"])
 # print(search_items)
@@ -30,10 +31,16 @@ for code in item_with_codes:
 
 for code in codes_id:
     count=0
+    links=0
+    link_tag = product_links[links].find("a")
+    if link_tag and link_tag.has_attr("href"):
+        items["link"].append("www.shoprite.co.za"+link_tag["href"])
+    links=links+1
     main_items=soup.find("div",class_=f'product-frame product-ga product_{code} js-heavy-attributes-populated')
 
     main_items_attr = main_items.get("data-product-ga")
-    data = json.loads(main_items_attr)
+    data = json.loads(main_items_attr )
+ 
     # print(main_items_attr)
     items["store"].append("shoprite")
     items["item_ID"].append(data["id"])
@@ -82,7 +89,7 @@ for code in codes_id:
             items["bundle deal"].append(main_items.find('span', class_="item-product__message__text").contents[0].split("\n ")[1])
   
             bundle_items=main_items.find('span', class_="item-product__message__text").contents[0].split("\n ")[1].split(" ")
-            print(main_items.find('span', class_="item-product__message__text").contents[0])
+            # print(main_items.find('span', class_="item-product__message__text").contents[0])
             for item in bundle_items:
                 if re.match(pattern, item, re.IGNORECASE):
                     items["bundle prices"].append(item)
@@ -135,6 +142,7 @@ print("bundle prices: ", len(items["bundle prices"]))
 print("bundle unites: ", len(items["bundle unites"]))
 df = pd.DataFrame(items)
 print(df)
+print(items["link"])
 
 
        
