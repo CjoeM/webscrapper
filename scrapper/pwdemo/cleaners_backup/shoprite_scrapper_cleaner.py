@@ -126,23 +126,23 @@ for code in codes_id:
 
 
 
-print("availanility: ", len(items["availability"]))
-print( "brand: ", len(items["brand"]))
-print("bundle deal",len(items["bundle deal"]))
-print("category ",len(items["category"]))
-print("itesm id ", len(items["item_ID"]))
-print("iteam name ",len(items["item_name"]))
-print("item size ",len(items["item_size"]))
-print("item price ",len(items["price"]))
-print("reward card ",len(items["reward card"]))
-print("special end date: ",len(items["special end date"]))
-print("special price ",len(items["special price"]))
-print("special: ",len(items["special"]))
-print("bundle prices: ", len(items["bundle prices"]))
-print("bundle unites: ", len(items["bundle unites"]))
+# print("availanility: ", len(items["availability"]))
+# print( "brand: ", len(items["brand"]))
+# print("bundle deal",len(items["bundle deal"]))
+# print("category ",len(items["category"]))
+# print("itesm id ", len(items["item_ID"]))
+# print("iteam name ",len(items["item_name"]))
+# print("item size ",len(items["item_size"]))
+# print("item price ",len(items["price"]))
+# print("reward card ",len(items["reward card"]))
+# print("special end date: ",len(items["special end date"]))
+# print("special price ",len(items["special price"]))
+# print("special: ",len(items["special"]))
+# print("bundle prices: ", len(items["bundle prices"]))
+# print("bundle unites: ", len(items["bundle unites"]))
 df = pd.DataFrame(items)
 print(df)
-print(items["link"])
+# print(items["link"])
 
 
        
