@@ -14,7 +14,7 @@ data=(data[0]["product_section_html"])
 
 
 items={"item_ID":[],"store":[],"item_name":[],"link":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],\
-       "special end date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
+       "special end date":[],"special start date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
 codes_id=[]
 soup = BeautifulSoup(data, "html.parser")
 search_items=soup.find("div", class_="hidden productListJSON")
@@ -50,6 +50,7 @@ for code in codes_id:
     items["category"].append(data["category"])
     items["availability"].append(data["stock"])
     size=data["name"].split(" ")
+    items["special start date"].append("")
     
     for i in size:
         if re.match(pattern_size, i,re.IGNORECASE):
