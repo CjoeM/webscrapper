@@ -1,14 +1,16 @@
 import json
 import re 
 import pandas as pd
+from datetime import datetime
 
 pattern_size=r'\b\d+(\.\d+)?\s?(kg|g|l|m|mm|cm|ml|mg)\b'
 pattern=r'R\s?\d+'
 pattern_bundle_units = r"\d+(\.\d+)?"
+today=datetime.today()
 
-items={"item_ID":[],"store":[],"item_name":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],\
-       "special start date":[],"special end date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[],"link":[]}
-with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json files/picknpay_items.json", "r") as f:
+items={"item_ID":[],"store":[],"item_name":[],"link":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],"special end date":[],\
+       "special start date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle units":[],"date_ingested":[]}
+with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json_files/picknpay_items.json", "r") as f:
     data = json.load(f)
 
 
@@ -19,6 +21,7 @@ for item in data:
     items["category"].append("")
     items["store"].append("picknpay")
     items["item_name"].append(item["name"])
+    items["date_ingested"].append(today)
     size=item["name"].split(" ")
     for i in size:
         if re.match(pattern_size, i,re.IGNORECASE):
@@ -47,7 +50,7 @@ for item in data:
             special_item_list=special_item['promotionTextMessage'].split(" ")
             items["bundle deal"].append(special_item['promotionTextMessage'])
             items["bundle prices"].append(special_item_list[2])
-            items["bundle unites"].append(special_item_list[0])
+            items["bundle units"].append(special_item_list[0])
             items["reward card"].append(special_item['promotionDisplayType'])
             items["special end date"].append(special_item["endDate"])
             items["special start date"].append(special_item["startDate"])
@@ -57,7 +60,7 @@ for item in data:
             special_item_list=special_item['promotionTextMessage'].split(" ")
             items["bundle deal"].append(special_item['promotionTextMessage'])
             items["bundle prices"].append(special_item_list[2])
-            items["bundle unites"].append(special_item_list[0])
+            items["bundle units"].append(special_item_list[0])
             items["reward card"].append(special_item['promotionDisplayType'])
             items["special end date"].append(special_item["endDate"])
             items["special start date"].append(special_item["startDate"])
@@ -68,7 +71,7 @@ for item in data:
             special_item_list=special_item['promotionTextMessage'].split(" ")
             items["bundle deal"].append(special_item['promotionTextMessage'])
             items["bundle prices"].append(special_item_list[2]+" "+special_item_list[3]+" "+special_item_list[4])
-            items["bundle unites"].append(special_item_list[1])
+            items["bundle units"].append(special_item_list[1])
             items["reward card"].append(special_item['promotionDisplayType'])
             items["special start date"].append(special_item["startDate"])
             items["special end date"].append(special_item["endDate"])
@@ -79,7 +82,7 @@ for item in data:
             print(special_item_list)
             items["bundle deal"].append(special_item['promotionTextMessage'])
             items["bundle prices"].append(special_item_list[2]+" "+special_item_list[3]+" "+special_item_list[4])
-            items["bundle unites"].append(special_item_list[4])
+            items["bundle units"].append(special_item_list[4])
             items["reward card"].append(special_item['promotionDisplayType'])
             items["special start date"].append(special_item["startDate"])
             items["special end date"].append(special_item["endDate"])
@@ -89,7 +92,7 @@ for item in data:
             special_item_list=special_item['promotionTextMessage'].split(" ")
             items["bundle deal"].append(special_item['promotionTextMessage'])
             items["bundle prices"].append(special_item_list[0])
-            items["bundle unites"].append("")
+            items["bundle units"].append("")
             items["reward card"].append(special_item['promotionDisplayType'])
             items["special end date"].append(special_item["endDate"])
             items["special start date"].append(special_item["startDate"])
@@ -100,7 +103,7 @@ for item in data:
             if re.compile(r"[0-9]") in  special_item_list[0] and "Smart Price" in special_item['promotionTextMessage']:
                 items["bundle deal"].append(special_item['promotionTextMessage'])
                 items["bundle prices"].append(special_item_list[2])
-                items["bundle unites"].append(special_item_list[0])
+                items["bundle units"].append(special_item_list[0])
                 items["reward card"].append(special_item['promotionDisplayType'])
                 items["special end date"].append(special_item["endDate"])
                 items["special start date"].append(special_item["startDate"])
@@ -108,7 +111,7 @@ for item in data:
             elif re.compile(r"[0-9]") in  special_item_list[0] and "R" in special_item_list[2]:
                 items["bundle deal"].append(special_item['promotionTextMessage'])
                 items["bundle prices"].append(special_item_list[2])
-                items["bundle unites"].append(special_item_list[0])
+                items["bundle units"].append(special_item_list[0])
                 items["reward card"].append(special_item['promotionDisplayType'])
                 items["special end date"].append(special_item["endDate"])
                 items["special start date"].append(special_item["startDate"])
@@ -116,7 +119,7 @@ for item in data:
             else :
                 items["bundle deal"].append(special_item['promotionTextMessage'])
                 items["bundle prices"].append("Null")
-                items["bundle unites"].append("Null")
+                items["bundle units"].append("Null")
                 items["reward card"].append(special_item['promotionDisplayType'])
                 items["special end date"].append(special_item["endDate"])
                 items["special start date"].append(special_item["startDate"])
@@ -126,7 +129,7 @@ for item in data:
             # if message[0] in range(1,99) and "Smart Price" not in item["potentialPromotions"]["promotionTextMessage"]:
             #     items["bundle deal"].append(item["potentialPromotions"]["promotionTextMessage"])
             #     items["bundle prices"].append(message[2])
-            #     items["bundle unites"].append(message[0])
+            #     items["bundle units"].append(message[0])
             # if "Smart Price" in message:
             #     pass
     except Exception as e:
@@ -134,7 +137,7 @@ for item in data:
             items["special start date"].append("")
             items["bundle deal"].append("")
             items["bundle prices"].append("")
-            items["bundle unites"].append("")
+            items["bundle units"].append("")
             items["reward card"].append("")
 
         # print(e)
@@ -153,9 +156,10 @@ print("special end date: ", len(items["special end date"]))
 print("special start date", len(items["special start date"]))
 print("bundle deal: ", len(items["bundle deal"]))
 print("bundle prices: ", len(items["bundle prices"]))
-print("bundle unites: ", len(items["bundle unites"]))
+print("bundle units: ", len(items["bundle units"]))
 print("reward card: ", len(items["reward card"]))
 print("category: ", len(items["category"]))
 # print(items["special"])
 df = pd.DataFrame(items)
+df.to_json("Oless_AWS/scrapper/pwdemo/json_files/aws_json_files/picknpay.json", orient="records", indent=2)
 print(df)

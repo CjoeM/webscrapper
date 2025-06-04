@@ -3,17 +3,20 @@ from bs4 import BeautifulSoup
 import json
 import re 
 import pandas as pd
+from datetime import datetime
 
 pattern_size=r'\b\d+(\.\d+)?\s?(kg|g|l|m|mm|cm|ml|mg)\b'
 pattern_bundle_units = r"\d+(\.\d+)?"
-with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json files/asdasdasd.json", "r") as f:
+today=datetime.today()
+
+with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json_files/asdasdasd.json", "r") as f:
     data = json.load(f)
     
 data=(data[0]["product_section_html"])
 # print(data)
 
 items={"item_ID":[],"store":[],"item_name":[],"link":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],"special end date":[],\
-       "availability":[],"special start date":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
+       "special start date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle units":[],"date_ingested":[]}
 codes_id=[]
 soup = BeautifulSoup(data, "html.parser")
 search_items=soup.find("div", class_="hidden productListJSON")
@@ -49,6 +52,7 @@ for code in codes_id:
     items["category"].append(data["category"])
     items["availability"].append(data["stock"])
     items["special start date"].append("")
+    items["date_ingested"].append(today)
     size=data["name"].split(" ")
     
     for i in size:
@@ -87,17 +91,17 @@ for code in codes_id:
                     items["bundle prices"].append(item)
                     for item in bundle_items:
                                 if re.match(pattern_bundle_units, item, re.IGNORECASE):
-                                    items["bundle unites"].append(item)
+                                    items["bundle units"].append(item)
                 if item=="Deal":
                      items["bundle prices"].append("")
-                     items["bundle unites"].append("")
+                     items["bundle units"].append("")
                 
             # items["description"].append("s")
             # print(items["description"])
         except:
              items["bundle deal"].append("")
              items["bundle prices"].append("")
-             items["bundle unites"].append("")
+             items["bundle units"].append("")
 
             # items["description"].append(main_items.find('span', class_="item-product__message__text").contents)
         
@@ -108,7 +112,7 @@ for code in codes_id:
         items["reward card"].append("")
         items["bundle deal"].append("")
         items["bundle prices"].append(" ")
-        items["bundle unites"].append("")
+        items["bundle units"].append("")
     # print(main_items.find('span', class_="item-product__message__text"))
     # print(main_items.find('span', class_="special-price__extra__text"))
     # print(items["description"].append(main_items.find('span', class_="item-product__message__text").contents))
@@ -130,6 +134,7 @@ for code in codes_id:
 # print("bundle prices: ", len(items["bundle prices"]))
 
 df = pd.DataFrame(items)
+df.to_json("Oless_AWS/scrapper/pwdemo/json_files/aws_json_files/checkers.json", orient="records", indent=2)
 print(df)
 # print(items["link"])
 

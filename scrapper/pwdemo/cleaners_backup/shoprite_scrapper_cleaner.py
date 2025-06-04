@@ -3,18 +3,20 @@ from bs4 import BeautifulSoup
 import json
 import re 
 import pandas as pd
+from datetime import datetime
 
 pattern_size=r'\b\d+(\.\d+)?\s?(kg|g|l|m|mm|cm|ml|mg)\b'
 pattern=r'R\s?\d+'
 pattern_bundle_units = r"\d+(\.\d+)?"
-with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json files/pleasework.json", "r") as f:
+today=datetime.today()
+with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/scrapper/pwdemo/json_files/pleasework.json", "r") as f:
     data = json.load(f)
     
 data=(data[0]["product_section_html"])
 
 
 items={"item_ID":[],"store":[],"item_name":[],"link":[],"item_size":[],"price":[],"special price":[],"brand":[],"category":[],"special":[],\
-       "special end date":[],"special start date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle unites":[]}
+       "special end date":[],"special start date":[],"availability":[],"reward card":[],"bundle deal":[],"bundle prices":[],"bundle units":[],"date_ingested":[]}
 codes_id=[]
 soup = BeautifulSoup(data, "html.parser")
 search_items=soup.find("div", class_="hidden productListJSON")
@@ -51,6 +53,7 @@ for code in codes_id:
     items["availability"].append(data["stock"])
     size=data["name"].split(" ")
     items["special start date"].append("")
+    items["date_ingested"].append(today)
     
     for i in size:
         if re.match(pattern_size, i,re.IGNORECASE):
@@ -96,10 +99,10 @@ for code in codes_id:
                     items["bundle prices"].append(item)
                     for item in bundle_items:
                         if re.match(pattern_bundle_units, item, re.IGNORECASE):
-                            items["bundle unites"].append(item)
+                            items["bundle units"].append(item)
                 if item=="Deal":
                      items["bundle prices"].append("")
-                     items["bundle unites"].append("")
+                     items["bundle units"].append("")
               
                 
             # items["description"].append("s")
@@ -108,7 +111,7 @@ for code in codes_id:
             #  print(main_items.find('span', class_="item-product__message__text").contents[0].split("\n ")[1], " except")
              items["bundle deal"].append("")
              items["bundle prices"].append("")
-             items["bundle unites"].append("")
+             items["bundle units"].append("")
           
 
             # items["description"].append(main_items.find('span', class_="item-product__message__text").contents)
@@ -120,29 +123,30 @@ for code in codes_id:
         items["reward card"].append("")
         items["bundle deal"].append("")
         items["bundle prices"].append(" ")
-        items["bundle unites"].append("")
+        items["bundle units"].append("")
     # print(main_items.find('span', class_="item-product__message__text"))
     # print(main_items.find('span', class_="special-price__extra__text"))
     # print(items["description"].append(main_items.find('span', class_="item-product__message__text").contents))
 
 
 
-# print("availanility: ", len(items["availability"]))
-# print( "brand: ", len(items["brand"]))
-# print("bundle deal",len(items["bundle deal"]))
-# print("category ",len(items["category"]))
-# print("itesm id ", len(items["item_ID"]))
-# print("iteam name ",len(items["item_name"]))
-# print("item size ",len(items["item_size"]))
-# print("item price ",len(items["price"]))
-# print("reward card ",len(items["reward card"]))
-# print("special end date: ",len(items["special end date"]))
-# print("special price ",len(items["special price"]))
-# print("special: ",len(items["special"]))
-# print("bundle prices: ", len(items["bundle prices"]))
-# print("bundle unites: ", len(items["bundle unites"]))
+print("availanility: ", len(items["availability"]))
+print( "brand: ", len(items["brand"]))
+print("bundle deal",len(items["bundle deal"]))
+print("category ",len(items["category"]))
+print("itesm id ", len(items["item_ID"]))
+print("iteam name ",len(items["item_name"]))
+print("item size ",len(items["item_size"]))
+print("item price ",len(items["price"]))
+print("reward card ",len(items["reward card"]))
+print("special end date: ",len(items["special end date"]))
+print("special price ",len(items["special price"]))
+print("special: ",len(items["special"]))
+print("bundle prices: ", len(items["bundle prices"]))
+print("bundle units: ", len(items["bundle units"]))
 df = pd.DataFrame(items)
-print(df)
+test1=df.to_json("Oless_AWS/scrapper/pwdemo/json_files/aws_json_files/shoprite.json", orient="records", indent=2)
+
 # print(items["link"])
 
 
