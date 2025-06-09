@@ -4,6 +4,9 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import random
+import os
+import csv
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
@@ -69,6 +72,17 @@ class PwdemoDownloaderMiddleware:
         return s
 
     def process_request(self, request, spider):
+        self.file_path = "used_user_agents.csv"
+        if 'playwright' in request.meta:
+            request.headers['User-Agent'] = random.choice(spider.settings.get('USER_AGENTS'))
+
+        # if not os.path.exists(self.file_path):
+        #     with open(self.file_path, mode="w", newline="") as f:
+        #         writer = csv.writer(f)
+        #         writer.writerow(f"Using User-Agent: {request.headers['User-Agent']}")
+
+
+            
         # Called for each request that goes through the downloader
         # middleware.
 
@@ -78,7 +92,7 @@ class PwdemoDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return None
+        # return None
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

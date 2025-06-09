@@ -7,6 +7,7 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import json
 BOT_NAME = "pwdemo"
 
 SPIDER_MODULES = ["pwdemo.spiders"]
@@ -17,6 +18,7 @@ DOWNLOAD_HANDLERS = {
     "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
 }
 # settings.py
+# TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 
 
@@ -31,7 +33,15 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 #     I added the above from chromium to args
 # """
 
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+# USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+USER_AGENTS=[]
+
+with open("/Users/sellomothemane/Desktop/Olles_Scrappers/Oless_AWS/user_agents/user_agents.json") as f:
+    USER_AGENTS_FILE = json.load(f)
+
+for user in USER_AGENTS_FILE:
+    USER_AGENTS.append(user["userAgent"])
+
 
 
 
@@ -69,9 +79,9 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "pwdemo.middlewares.PwdemoDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   "pwdemo.middlewares.PwdemoDownloaderMiddleware": 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
